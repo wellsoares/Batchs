@@ -16,6 +16,9 @@ import pojo.Usuario;
  */
 public class TesteMainGerenciador {
 
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
 
         Map<Class, String> mapClass = new HashMap<>();
