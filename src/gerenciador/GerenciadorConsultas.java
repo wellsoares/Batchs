@@ -11,13 +11,14 @@ import pojo.ConsultaGerenciada;
  */
 public class GerenciadorConsultas {
 
-    private final List<ConsultaGerenciada> consultasGerenciadas;
-    private List<Idto> dtosObtidos;
     private static final int ITEM = 0;
-    private ConsultaGerenciada consultaGerenciadaAtual;
-    //Contadores Consulta e pagina;
-    private final int CONSULTA_ATUAL = 0;
     private long PAGINA_ATUAL = 1L;
+    private final int CONSULTA_ATUAL = 0;
+
+    private final List<ConsultaGerenciada> consultasGerenciadas;
+    private final List<Idto> dtosObtidos;
+
+    private ConsultaGerenciada consultaGerenciadaAtual;
 
     public GerenciadorConsultas() {
         consultasGerenciadas = new ArrayList<>();
@@ -27,13 +28,12 @@ public class GerenciadorConsultas {
     public void preencherListaDtos() {
         if (!consultasGerenciadas.isEmpty()) {
             consultaGerenciadaAtual = consultasGerenciadas.get(CONSULTA_ATUAL);
-            dtosObtidos = consultaGerenciadaAtual.getDao().executarConsulta(consultaGerenciadaAtual.getConsulta(), PAGINA_ATUAL, consultaGerenciadaAtual.getQtdPagina());
-           // System.out.println("SQL: " + consultaGerenciadaAtual.getConsulta() + " Pagina: " + PAGINA_ATUAL + " QtdPagina: " + consultaGerenciadaAtual.getQtdPagina() + " Qtd Dtos: " + dtosObtidos.size());
+            dtosObtidos.addAll(consultaGerenciadaAtual.getDao().executarConsulta(consultaGerenciadaAtual.getConsulta(), PAGINA_ATUAL, consultaGerenciadaAtual.getQtdPagina()));
             PAGINA_ATUAL++;
 
             if (ultimaPagina()) {
                 consultasGerenciadas.remove(CONSULTA_ATUAL);
-                PAGINA_ATUAL = 1;
+                PAGINA_ATUAL = 1L;
             }
         }
     }
@@ -47,13 +47,10 @@ public class GerenciadorConsultas {
     }
 
     public Idto obterItem() {
-
         Idto dto = dtosObtidos.remove(ITEM);
-
         if (dtosObtidos.isEmpty()) {
             preencherListaDtos();
         }
-
         return dto;
     }
 
