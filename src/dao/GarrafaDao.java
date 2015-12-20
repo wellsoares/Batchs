@@ -4,20 +4,19 @@ import interfaces.IDao;
 import java.util.ArrayList;
 import java.util.List;
 import pojo.Garrafa;
-import pojo.Usuario;
 
 /**
  *
  * @author well
  */
-public class GarrafaDao implements IDao<Garrafa> {
+public class GarrafaDao implements IDao {
 
-    public List<Garrafa> buscarGarrafas(String sql, long pagina, long qtdPagina) {
+    public List<Garrafa> buscarGarrafas(String sql, long qtdPagina, long pagina) {
 
         List<Garrafa> listUsuarios = new ArrayList<>();
         Garrafa u;
 
-        if (pagina < 5) {
+        if (pagina <= 1) {
             for (long i = 0; i < qtdPagina; i++) {
 
                 u = new Garrafa();
@@ -40,8 +39,13 @@ public class GarrafaDao implements IDao<Garrafa> {
     }
 
     @Override
-    public List<Garrafa> executarConsulta(String consulta, long pagina, long qtdPagina) {
-        return buscarGarrafas(consulta, pagina, qtdPagina);
+    public List<?> paginarConsulta(String sql, long pagina, long quantidadePagina) {
+        return buscarGarrafas(sql, pagina, quantidadePagina);
+    }
+
+    @Override
+    public List executarConsulta(String consulta, long pagina, long qtdPagina) {
+       return buscarGarrafas(consulta, qtdPagina, pagina);
     }
 
 }

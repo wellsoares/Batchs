@@ -1,6 +1,5 @@
 package gerenciador;
 
-import interfaces.Idto;
 import java.util.ArrayList;
 import java.util.List;
 import pojo.ConsultaGerenciada;
@@ -16,7 +15,7 @@ public class GerenciadorConsultas {
     private final int CONSULTA_ATUAL = 0;
 
     private final List<ConsultaGerenciada> consultasGerenciadas;
-    private final List<Idto> dtosObtidos;
+    private final List dtosObtidos;
 
     private ConsultaGerenciada consultaGerenciadaAtual;
 
@@ -26,15 +25,22 @@ public class GerenciadorConsultas {
     }
 
     public void preencherListaDtos() {
-        if (!consultasGerenciadas.isEmpty()) {
-            consultaGerenciadaAtual = consultasGerenciadas.get(CONSULTA_ATUAL);
-            dtosObtidos.addAll(consultaGerenciadaAtual.getDao().executarConsulta(consultaGerenciadaAtual.getConsulta(), PAGINA_ATUAL, consultaGerenciadaAtual.getQtdPagina()));
-            PAGINA_ATUAL++;
 
-            if (ultimaPagina()) {
-                consultasGerenciadas.remove(CONSULTA_ATUAL);
-                PAGINA_ATUAL = 1L;
+        try {
+            if (!consultasGerenciadas.isEmpty()) {
+                consultaGerenciadaAtual = consultasGerenciadas.get(CONSULTA_ATUAL);
+
+                dtosObtidos.addAll(consultaGerenciadaAtual.getDao().paginarConsulta(consultaGerenciadaAtual.getConsulta(), consultaGerenciadaAtual.getQtdPagina(), PAGINA_ATUAL));
+
+                PAGINA_ATUAL++;
+
+                if (ultimaPagina()) {
+                    consultasGerenciadas.remove(CONSULTA_ATUAL);
+                    PAGINA_ATUAL = 1L;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -46,15 +52,17 @@ public class GerenciadorConsultas {
         return (!consultasGerenciadas.isEmpty() || !dtosObtidos.isEmpty());
     }
 
-    public Idto obterItem() {
-        Idto dto = dtosObtidos.remove(ITEM);
+    public Object obterItem() {
+        Object dto = dtosObtidos.remove(ITEM);
         if (dtosObtidos.isEmpty()) {
             preencherListaDtos();
         }
         return dto;
     }
 
-    public void adicionarConsulta(ConsultaGerenciada consulta) {
+    public GerenciadorConsultas adicionarConsulta(ConsultaGerenciada consulta) {
         consultasGerenciadas.add(consulta);
+        return this;
     }
+
 }

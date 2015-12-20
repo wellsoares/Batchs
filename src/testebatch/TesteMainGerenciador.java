@@ -3,9 +3,8 @@ package testebatch;
 import dao.GarrafaDao;
 import dao.UsuarioDao;
 import gerenciador.GerenciadorConsultas;
-import interfaces.Idto;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 import pojo.ConsultaGerenciada;
 import pojo.Garrafa;
 import pojo.Usuario;
@@ -20,30 +19,39 @@ public class TesteMainGerenciador {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        Map<Class, String> mapClass = new HashMap<>();
-        String casa = "CASA";
-        String casa1 = "4444";
-        
+
         GerenciadorConsultas gerenciador = new GerenciadorConsultas();
-        gerenciador.adicionarConsulta(new ConsultaGerenciada("USUARIO", 5, new UsuarioDao()));
-        gerenciador.adicionarConsulta(new ConsultaGerenciada("GARRAFA", 10, new GarrafaDao()));
-        
-        mapClass.put(Usuario.class, casa);
-        mapClass.put(Garrafa.class, casa1);
-        
-        Idto dto;
-        
+        gerenciador.adicionarConsulta(new ConsultaGerenciada("USUARIO", 5, new UsuarioDao(), Usuario.class))
+                .adicionarConsulta(new ConsultaGerenciada("GARRAFA", 10, new GarrafaDao(), Garrafa.class))
+                .adicionarConsulta(new ConsultaGerenciada("STRING", 5, new UsuarioDao(), String.class));
+
+        Object dto;
+
         gerenciador.preencherListaDtos();
         while (gerenciador.temProximo()) {
             dto = gerenciador.obterItem();
-            String s = mapClass.get(dto.getClass());
-            System.out.println("ITEM: " + s);
-            teste((Usuario) dto);
+            System.out.println("ITEM: " + dto);
         }
+
+        List<Integer> li = Arrays.asList(1, 2, 3);
+        List<String> ls = Arrays.asList("one", "two", "three");
+        printList(li);
+        printList(ls);
+
     }
-    
-    public static void teste(Usuario u) {
-        System.out.println("Usuario : " + u);
+
+    public static void printList(List list) {
+        for (Object elem : list) {
+            System.out.println(elem + " ");
+        }
+        System.out.println();
     }
+
+    public static void printList1(List<?> list) {
+        for (Object elem : list) {
+            System.out.print(elem + " ");
+        }
+        System.out.println();
+    }
+
 }

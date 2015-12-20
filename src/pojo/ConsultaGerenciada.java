@@ -8,37 +8,34 @@ import interfaces.IDao;
  */
 public class ConsultaGerenciada {
 
-    private String consulta;
-    private long qtdPagina;
-    private IDao dao;
+    private final String consulta;
+    private final long qtdPagina;
+    private final IDao dao;
+    private final Class tipoRetorno;
 
-    public ConsultaGerenciada(String consulta, long qtdPagina, IDao dao) {
+    private final static String TEMPLATE_PAGINACAO_INICIO = " Inicio Paginacao ";
+    private final static String TEMPLATE_PAGINACAO_FIM = " Fim Paginacao ";
+
+    public ConsultaGerenciada(String consulta, long qtdPagina, IDao dao, Class c) {
         this.consulta = consulta;
         this.qtdPagina = qtdPagina;
         this.dao = dao;
+        this.tipoRetorno = c;
     }
 
     public String getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(String consulta) {
-        this.consulta = consulta;
+        return TEMPLATE_PAGINACAO_INICIO + consulta + TEMPLATE_PAGINACAO_FIM;
     }
 
     public long getQtdPagina() {
         return qtdPagina;
     }
 
-    public void setQtdPagina(long qtdPagina) {
-        this.qtdPagina = qtdPagina;
-    }
-
     public IDao getDao() {
         return dao;
     }
 
-    public void setDao(IDao dao) {
-        this.dao = dao;
+    public Class getTipoRetorno() {
+        return tipoRetorno;
     }
 }
